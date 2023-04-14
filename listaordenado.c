@@ -19,7 +19,7 @@ lista t *lista crear() {
     return lista;
 }
 
-int lista insertar(lista t *l, elemento_t elem, unsigned int pos) {
+int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
     if(l != NULL) return FALSE; // CHEQUEO QUE NO SEA NULA
 
     if(l->cantidad == 0){
@@ -37,22 +37,34 @@ int lista insertar(lista t *l, elemento_t elem, unsigned int pos) {
     }
 }
 
-elemento t *lista eliminar(lista t *l, unsigned int pos) {
+elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
+    elemento_t toReturn = NULL;
+    if(l == NULL || l->cantidad == 0 || l->cantidad < pos) return toReturn;
+    else {
+        celda_t *cursor = l->primera;
+        for(int i = 0; i < pos-1; i++) {
+            cursor = cursor->siguiente;
+        }
+        celda_t *matar = cursor->siguiente;
+        cursor->siguiente = matar->siguiente;
+        toReturn = matar->elem;
+        free(matar);
+        return toReturn;
+    }
+}
+
+elemento_t *lista_elemento(lista_t *l, unsigned int pos) {
 
 }
 
-elemento t *lista elemento(lista t *l, unsigned int pos) {
+int lista_ordenar(lista t *l, funcion_comparacion_t comparar) {
 
 }
 
-int lista ordenar(lista t *l, funcion comparacion t comparar) {
+unsigned int lista_cantidad(lista t *l) {
 
 }
 
-unsigned int lista cantidad(lista t *l) {
-
-}
-
-int lista vacia(list t lista) {
+int lista_vacia(list_t lista) {
 
 }
