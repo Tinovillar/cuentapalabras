@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
-#include <listaordenada.h>
 
 
 // Definición de la estructura para un nodo trie
@@ -64,7 +63,7 @@ void printTrie(TrieNode* node, char* str, int level) {
 }
 
 int main() {
-    lista_t *lista =
+
     return 0;
 }
 

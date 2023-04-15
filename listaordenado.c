@@ -1,4 +1,9 @@
 #include "listaordenada.h"
+#include <stdio.h>
+#include <stdlib.h>
+
+#define TRUE 1
+#define FALSE 0
 
 typedef struct celda {
     elemento_t elem;
@@ -14,8 +19,8 @@ struct lista {
 
 // Implementacion de metodos
 
-lista_t *lista_crear() {
-    lista_t *lista = (*lista_t) malloc(sizeof(lista_t));
+lista_t* lista_crear() {
+    lista_t* lista = (lista_t*) malloc(sizeof(lista_t));
     lista->cantidad = 0;
     lista->primera = NULL;
     return lista;
@@ -25,7 +30,7 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
     if(l != NULL) return FALSE; // CHEQUEO QUE NO SEA NULA
 
     if(l->cantidad == 0){
-        l->primera = (*celda_t) malloc(sizeof(celda_t));
+        l->primera = (celda_t*) malloc(sizeof(celda_t));
         l->primera->elem = elem;
         l->primera->siguiente = NULL;
     } else {
@@ -33,14 +38,14 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
         for(int i = 0; i < l->cantidad; i++) {
             cursor = cursor->siguiente;
         }
-        cursor->siguiente = (*celda_t) malloc(sizeof(celda_t));
+        cursor->siguiente = (celda_t*) malloc(sizeof(celda_t));
         cursor->siguiente->elem = elem;
         cursor->siguiente->siguiente = NULL;
     }
 }
 
 elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
-    elemento_t toReturn = NULL;
+    elemento_t *toReturn = NULL;
     if(l == NULL || l->cantidad == 0 || l->cantidad < pos) return toReturn;
     else {
         celda_t *cursor = l->primera;
@@ -49,7 +54,7 @@ elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
         }
         celda_t *matar = cursor->siguiente;
         cursor->siguiente = matar->siguiente;
-        toReturn = matar->elem;
+        *toReturn = matar->elem;
         free(matar);
         return toReturn;
     }
@@ -67,6 +72,6 @@ unsigned int lista_cantidad(lista_t *l) {
 
 }
 
-int lista_vacia(list_t lista) {
+int lista_vacia(lista_t lista) {
 
 }
