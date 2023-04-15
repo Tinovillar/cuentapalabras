@@ -18,5 +18,10 @@ int main()
     lista_insertar(lista, elem2, 1);
     printf("Cantidad de elementos: %u\n", lista_cantidad(lista));
     mostrar_elementos(lista);
+
+    elemento_t *primero = lista_elemento(lista, 0);
+    elemento_t *segundo = lista_elemento(lista, 1);
+
+    printf("Primero: %s, Segundo: %s\n", primero->b, segundo->b);
     return 0;
 }

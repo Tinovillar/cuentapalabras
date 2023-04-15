@@ -33,7 +33,7 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
     if (l == NULL)
         return FALSE;
 
-    if (pos > l->cantidad)
+    if (pos < 0 || pos > l->cantidad)
         return FALSE;
 
     celda_t *celda_nueva = (celda_t *)malloc(sizeof(celda_t));
@@ -62,6 +62,8 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
         prev->siguiente = celda_nueva;
     }
 
+    free(current);
+
     l->cantidad++;
     return TRUE;
 }
@@ -88,6 +90,22 @@ elemento_t *lista_eliminar(lista_t *l, unsigned int pos)
 
 elemento_t *lista_elemento(lista_t *l, unsigned int pos)
 {
+    if (l == NULL)
+        return NULL;
+
+    if (pos < 0 || pos > l->cantidad)
+        return NULL;
+
+    celda_t *current = l->primera;
+    unsigned int i = 0;
+
+    while (current != NULL && i < pos)
+    {
+        current = current->siguiente;
+        i++;
+    }
+
+    return &(current->elem);
 }
 
 int lista_ordenar(lista_t *l, funcion_comparacion_t comparar)
