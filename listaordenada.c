@@ -1,5 +1,3 @@
-#include "listaordenada.h"
-
 typedef struct celda {
     elemento_t elem;
     struct celda *siguiente;
@@ -40,22 +38,6 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
 }
 
 elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
-    elemento_t toReturn = NULL;
-    if(l == NULL || l->cantidad == 0 || l->cantidad < pos) return toReturn;
-    else {
-        celda_t *cursor = l->primera;
-        for(int i = 0; i < pos-1; i++) {
-            cursor = cursor->siguiente;
-        }
-        celda_t *matar = cursor->siguiente;
-        cursor->siguiente = matar->siguiente;
-        toReturn = matar->elem;
-        free(matar);
-        return toReturn;
-    }
-}
-
-elemento_t *lista_elemento(lista_t *l, unsigned int pos) {
 
 }
 

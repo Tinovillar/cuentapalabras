@@ -19,17 +19,17 @@ typedef struct lista lista_t;
 
 // Metodos
 
-lista t *lista crear();
+lista_t *lista_crear();
 
-int lista insertar(lista t *l, elemento t elem, unsigned int pos);
+int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos);
 
-elemento t *lista eliminar(lista t *l, unsigned int pos);
+elemento_t *lista_eliminar(lista_t *l, unsigned int pos);
 
-elemento t *lista elemento(lista t *l, unsigned int pos);
+elemento_t *lista_elemento(lista_t *l, unsigned int pos);
 
-int lista ordenar(lista t *l, funcion comparacion t comparar)
+int lista_ordenar(lista_t *l, funcion_comparacion_t comparar);
 
-unsigned int lista cantidad(lista t *l);
+unsigned int lista_cantidad(lista_t *l);
 
-int lista vacia(list t lista);
+int lista_vacia(lista_t lista);
 

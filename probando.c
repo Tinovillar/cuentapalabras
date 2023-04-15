@@ -2,6 +2,7 @@
 #include <stdlib.h>
 #include <stdbool.h>
 #include <string.h>
+#include <listaordenada.h>
 
 
 // Definición de la estructura para un nodo trie
@@ -63,6 +64,11 @@ void printTrie(TrieNode* node, char* str, int level) {
 }
 
 int main() {
+    lista_t *lista =
+    return 0;
+}
+
+void trietest(){
     TrieNode* root = createTrieNode('\0');
 
     FILE *fp;
@@ -97,5 +103,5 @@ int main() {
     char str[100];
     printf("Todas las cadenas en el trie:\n");
     printTrie(root, str, 0);
-    return 0;
 }
+
