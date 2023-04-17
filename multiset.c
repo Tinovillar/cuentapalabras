@@ -1,7 +1,9 @@
 #include "multiset.h"
+
 #include "listaordenada.h"
-#include "cuentapalabras.h"
-#include <stdio.h>
+#include "utils.h"
+
+#include <stdlib.h>
 
 struct trie{
     int cantidad;

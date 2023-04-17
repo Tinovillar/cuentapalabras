@@ -1,7 +1,8 @@
 #include "listaordenada.h"
 
-#include "cuentapalabras.h"
+#include "utils.h"
 
+#include <stdlib.h>
 #include <stdio.h>
 
 typedef struct celda
@@ -109,6 +110,14 @@ elemento_t *lista_elemento(lista_t *l, unsigned int pos)
     return &(current->elem);
 }
 
+void intercambiar(elemento_t *e1, elemento_t *e2) {
+    elemento_t aux = *e1;
+    e1->a = e2->a;
+    e1->b = e2->b;
+    e2->a = aux.a;
+    e2->b = aux.b;
+}
+
 int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
     celda_t *current = l->primera;
     celda_t *cursor;
@@ -131,14 +140,6 @@ int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
     toReturn = TRUE;
     }
     return toReturn;
-}
-
-void intercambiar(elemento_t *e1, elemento_t *e2) {
-    elemento_t aux = *e1;
-    e1->a = e2->a;
-    e1->b = e2->b;
-    e2->a = aux.a;
-    e2->b = aux.b;
 }
 
 unsigned int lista_cantidad(lista_t *l)
