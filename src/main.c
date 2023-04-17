@@ -2,9 +2,8 @@
 
 #include <stdio.h>
 
-int main()
-{
-    lista_t *lista = lista_crear();
+void test() {
+   lista_t *lista = lista_crear();
     printf("Cantidad de elementos: %u\n", lista_cantidad(lista));
 
     elemento_t elem1;
@@ -55,5 +54,11 @@ int main()
 
     printf("\nORDENAR LISTA:\n");
     mostrar_elementos(lista);
+}
+
+int main()
+{
+    print_cwd();
+    leer_archivos_de_directorio("./res/prueba");
     return 0;
 }

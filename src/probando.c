@@ -62,10 +62,12 @@ void printTrie(TrieNode* node, char* str, int level) {
     }
 }
 
+/*
 int main() {
 
     return 0;
 }
+*/
 
 void trietest(){
     TrieNode* root = createTrieNode('\0');
