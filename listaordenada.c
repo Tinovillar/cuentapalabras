@@ -119,7 +119,7 @@ int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
         while(cursor->siguiente != NULL){
             cursor = cursor->siguiente;
             printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
-            if(comparar(&current->elem, &cursor->elem) == ELEM1_MENOR_QUE_ELEM2){
+            if(comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2){
                 printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
                 intercambiar(&current->elem, &cursor->elem);
                 printf("DESPUES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
