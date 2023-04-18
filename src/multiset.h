@@ -6,8 +6,6 @@
 struct trie;
 typedef struct trie multiset_t;
 
-// Metodos
-
 multiset_t *multiset_crear();
 
 void multiset_insertar(multiset_t *m, char *s);

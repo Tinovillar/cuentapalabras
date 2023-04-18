@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8" standalone="yes"?>
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
 <CodeBlocks_project_file>
 	<FileVersion major="1" minor="6" />
 	<Project>
@@ -31,6 +31,28 @@
 		<Compiler>
 			<Add option="-Wall" />
 		</Compiler>
+		<Unit filename="src/cuentapalabras.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/cuentapalabras.h" />
+		<Unit filename="src/listaordenada.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/listaordenada.h" />
+		<Unit filename="src/main.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/multiset.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/multiset.h" />
+		<Unit filename="src/probando.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/utils.c">
+			<Option compilerVar="CC" />
+		</Unit>
+		<Unit filename="src/utils.h" />
 		<Extensions />
 	</Project>
 </CodeBlocks_project_file>

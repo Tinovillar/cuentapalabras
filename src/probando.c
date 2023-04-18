@@ -81,7 +81,7 @@ void trietest(){
 
     if(fp == NULL) {
         printf("No se pudo abrir");
-        return 1;
+        return;
     }
 
     char anterior;

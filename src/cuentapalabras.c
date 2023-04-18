@@ -1,30 +1,19 @@
 #include "cuentapalabras.h"
 
+#include "utils.h"
+
 #include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 #include <unistd.h>
 #include <dirent.h>
-
-void print_cwd()
-{
-    char cwd[1024]; // Allocate a buffer for the cwd
-    if (getcwd(cwd, sizeof(cwd)) != NULL)
-    {
-        // Successfully retrieved the cwd, print it to stdout
-        printf("Current working directory: %s\n", cwd);
-    }
-    else
-    {
-        // Error occurred while retrieving the cwd, print an error message to stderr
-        fprintf(stderr, "Failed to get current working directory\n");
-    }
-}
 
 void leer_archivos_de_directorio(char *directorio)
 {
     DIR *directory = opendir(directorio);
     if (directory == NULL)
     {
-        fprintf(stderr, "No se pudo leer el directorio '%s'\n", directorio);
+        printf("No se pudo leer el directorio '%s'\n", directorio);
         return;
     }
 
@@ -32,10 +21,42 @@ void leer_archivos_de_directorio(char *directorio)
     while ((entry = readdir(directory)) != NULL)
     {
         // Ignorar . y ..
-        if (entry->d_name[0] != '.')
+        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
+            continue;
+
+        char *extension_archivo = strrchr(entry->d_name, '.');
+        if (strcmp(extension_archivo, EXTENSION_VALIDA) != 0)
         {
-            printf("%s\n", entry->d_name);
+            free(extension_archivo);
+            continue;
         }
+
+        printf("%s %s\n", entry->d_name, extension_archivo);
+        char *ruta_archivo = concatenar_strings(directorio, entry->d_name);
+        leer_contenido_archivo(ruta_archivo);
     }
     closedir(directory);
+}
+
+void leer_contenido_archivo(char *archivo)
+{
+    FILE *fp = fopen(archivo, "r");
+    if (fp == NULL)
+    {
+        printf("No se pudo leer el archivo '%s'\n", archivo);
+        return;
+    }
+
+    printf("==========================\n");
+    printf("Contenido del archivo\n");
+
+    char buffer[PALABRA_LONGITUD_MAXIMA];
+    while (fgets(buffer, PALABRA_LONGITUD_MAXIMA, fp))
+    {
+        printf("%s", buffer);
+    }
+
+    printf("\n");
+    printf("==========================\n");
+    fclose(fp);
 }

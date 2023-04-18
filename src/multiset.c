@@ -3,14 +3,14 @@
 #include "utils.h"
 
 #include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
 
 struct trie
 {
     int cantidad;
     struct trie *siguiente[26];
 };
-
-// Metodos
 
 multiset_t *multiset_crear()
 {
