@@ -172,7 +172,9 @@ int parsear_contenido_archivo(multiset_t *multiset_archivo, multiset_t* multiset
 
 int crear_archivo_resultados(resultado_directorio_t* resultado_directorio, char* ruta_directorio) {
     char* ruta_archivo = concatenar_strings(ruta_directorio, ARCHIVO_CADAUNO);
+    char* ruta_archivo_totales = concatenar_strings(ruta_directorio, ARCHIVO_TOTALES);
     FILE *archivo = fopen(ruta_archivo, "w");
+    FILE *archivo_totales = fopen(ruta_archivo_totales, "w");
     if (archivo == NULL)
     {
         printf("Error: No se pudo crear el archivo: '%s'\n", ruta_archivo);
@@ -194,7 +196,14 @@ int crear_archivo_resultados(resultado_directorio_t* resultado_directorio, char*
             }
         }
     }
-
+    lista_t *elementos = multiset_elementos(resultado_directorio->totales,
+                                                    (int (*)(elemento_t, elemento_t)) comparar_enteros);
+    unsigned int cantidad_elementos = lista_cantidad(elementos);
+    for (int j = 0; j <cantidad_elementos; j++) {
+        elemento_t* elemento = lista_elemento(elementos, j);
+        fprintf(archivo_totales, "%d    %s\n", elemento->a, elemento->b);
+    }
+    fclose(archivo_totales);
     fclose(archivo);
     return TRUE;
 }
