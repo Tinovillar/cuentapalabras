@@ -37,6 +37,6 @@ unsigned int lista_cantidad(lista_t *l);
 
 int lista_vacia(lista_t lista);
 
-void mostrar_elementos(lista_t *l);
+void mostrar_elementos(lista_t *lista);
 
 #endif

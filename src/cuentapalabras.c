@@ -1,62 +1,26 @@
-#include "cuentapalabras.h"
-
 #include "utils.h"
 
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
-#include <unistd.h>
-#include <dirent.h>
 
-void leer_archivos_de_directorio(char *directorio)
+int main(int argc, char *argv[])
 {
-    DIR *directory = opendir(directorio);
-    if (directory == NULL)
+    // Condicion para mostrar cartel de ayuda.
+    if (argc == 1 || (argc > 1 && strcmp(argv[1], PARAMETRO_AYUDA) == 0))
     {
-        printf("No se pudo leer el directorio '%s'\n", directorio);
-        return;
+        mostrar_ayuda();
+        return 0;
     }
 
-    struct dirent *entry;
-    while ((entry = readdir(directory)) != NULL)
-    {
-        // Ignorar . y ..
-        if (strcmp(entry->d_name, ".") == 0 || strcmp(entry->d_name, "..") == 0)
-            continue;
+    // Parseo de ruta de directorio
+    char *ruta_directorio = argv[1];
+    agregar_slash_directorio(ruta_directorio);
 
-        char *extension_archivo = strrchr(entry->d_name, '.');
-        if (strcmp(extension_archivo, EXTENSION_VALIDA) != 0)
-        {
-            free(extension_archivo);
-            continue;
-        }
-
-        printf("%s %s\n", entry->d_name, extension_archivo);
-        char *ruta_archivo = concatenar_strings(directorio, entry->d_name);
-        leer_contenido_archivo(ruta_archivo);
+    // Metodos principales.
+    resultado_directorio_t* resultado_directorio = parsear_archivos_directorio(ruta_directorio);
+    int resultado = crear_archivo_resultados(resultado_directorio, ruta_directorio);
+    if (resultado == TRUE) {
+        printf("Se escribio el archivo exitosamente!\n");
     }
-    closedir(directory);
-}
-
-void leer_contenido_archivo(char *archivo)
-{
-    FILE *fp = fopen(archivo, "r");
-    if (fp == NULL)
-    {
-        printf("No se pudo leer el archivo '%s'\n", archivo);
-        return;
-    }
-
-    printf("==========================\n");
-    printf("Contenido del archivo\n");
-
-    char buffer[PALABRA_LONGITUD_MAXIMA];
-    while (fgets(buffer, PALABRA_LONGITUD_MAXIMA, fp))
-    {
-        printf("%s", buffer);
-    }
-
-    printf("\n");
-    printf("==========================\n");
-    fclose(fp);
+    return resultado;
 }

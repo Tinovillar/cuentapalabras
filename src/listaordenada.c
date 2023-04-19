@@ -4,6 +4,7 @@
 
 #include <stdlib.h>
 #include <stdio.h>
+#include <string.h>
 
 typedef struct celda
 {
@@ -64,8 +65,6 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
         prev->siguiente = celda_nueva;
     }
 
-    free(current);
-
     l->cantidad++;
     return TRUE;
 }
@@ -110,7 +109,8 @@ elemento_t *lista_elemento(lista_t *l, unsigned int pos)
     return &(current->elem);
 }
 
-void intercambiar(elemento_t *e1, elemento_t *e2) {
+void intercambiar(elemento_t *e1, elemento_t *e2)
+{
     elemento_t aux = *e1;
     e1->a = e2->a;
     e1->b = e2->b;
@@ -118,26 +118,31 @@ void intercambiar(elemento_t *e1, elemento_t *e2) {
     e2->b = aux.b;
 }
 
-int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
+int lista_ordenar(lista_t *l, funcion_comparacion_t comparar)
+{
     celda_t *current = l->primera;
     celda_t *cursor;
     int toReturn = FALSE;
-    if(l->cantidad > 0) {
-        while(current->siguiente != NULL) {
-        cursor = current;
-        while(cursor->siguiente != NULL){
-            cursor = cursor->siguiente;
-            printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
-            if(comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2){
-                printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
-                intercambiar(&current->elem, &cursor->elem);
-                printf("DESPUES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
+    if (l->cantidad > 0)
+    {
+        while (current->siguiente != NULL)
+        {
+            cursor = current;
+            while (cursor->siguiente != NULL)
+            {
+                cursor = cursor->siguiente;
+                //printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
+                if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2)
+                {
+                  //  printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
+                    intercambiar(&current->elem, &cursor->elem);
+                    //printf("DESPUES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
+                }
+                //printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
             }
-            printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
+            current = current->siguiente;
         }
-        current = current->siguiente;
-    }
-    toReturn = TRUE;
+        toReturn = TRUE;
     }
     return toReturn;
 }
@@ -159,15 +164,14 @@ int lista_vacia(lista_t lista)
     return vacia;
 }
 
-void mostrar_elementos(lista_t *l)
+void mostrar_elementos(lista_t *lista)
 {
-    if (l != NULL)
-    {
-        celda_t *curr = l->primera;
-        while (curr != NULL)
-        {
-            printf("Elemento %s\n", curr->elem.b);
-            curr = curr->siguiente;
-        }
+    if (lista == NULL) return;
+
+    celda_t *cursor;
+    cursor = lista->primera;
+    while (cursor != NULL) {
+        printf("[%d]    (%s)\n", cursor->elem.a, cursor->elem.b);
+        cursor = cursor->siguiente;
     }
 }

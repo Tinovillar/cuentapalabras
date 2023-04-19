@@ -11,6 +11,7 @@
 				<Option object_output="obj/Debug/" />
 				<Option type="1" />
 				<Option compiler="gcc" />
+				<Option parameters="./res/prueba" />
 				<Compiler>
 					<Add option="-g" />
 				</Compiler>
@@ -34,7 +35,6 @@
 		<Unit filename="src/cuentapalabras.c">
 			<Option compilerVar="CC" />
 		</Unit>
-		<Unit filename="src/cuentapalabras.h" />
 		<Unit filename="src/listaordenada.c">
 			<Option compilerVar="CC" />
 		</Unit>

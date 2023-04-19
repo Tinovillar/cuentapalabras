@@ -1,6 +1,5 @@
 #include "listaordenada.h"
 
-#include "cuentapalabras.h"
 #include "utils.h"
 
 #include <stdio.h>
@@ -65,54 +64,4 @@ void test()
 
     printf("\nORDENAR LISTA:\n");
     mostrar_elementos(lista);
-}
-
-void mostrar_ayuda()
-{
-    printf("===========================================================================\n");
-    printf("Bienvenido a Cuenta Palabras\n");
-    printf("\n");
-    printf("El programa debera contar la cantidad de veces que aparece cada\n");
-    printf("palabra en cada uno de los archivos y generar dos archivos de salida: \n");
-    printf("\n");
-    printf("    - cadauno.out: contendra la cantidad de veces que aparece cada\n");
-    printf("palabra en cada archivo de texto procesado, ordenado alfabeticamente\n");
-    printf("y por cantidad de apariciones de forma ascendente.\n");
-    printf("\n");
-    printf("    - totales.out: incluira la cantidad de veces que aparece cada\n");
-    printf("palabra en todos los archivos de texto procesados, tambi�n ordenado\n");
-    printf(" alfabeticamente y por cantidad de apariciones de forma descendente.\n");
-    printf("\n");
-    printf("Metodo de uso: \n");
-    printf("Para usar el programa, debe ingresar como primer parametro la direccion\n");
-    printf("del directorio donde se encuentran los archivos a analizar.\n");
-    printf("===========================================================================\n");
-}
-
-// Funcion que agrega un slash (/) al final del directorio si el usuario no lo puso.
-void agregar_slash_directorio(char *directorio)
-{
-    unsigned int directorio_len = strlen(directorio);
-    int tiene_slash = directorio[directorio_len - 1] == '/';
-    if (tiene_slash == FALSE)
-    {
-        directorio[directorio_len] = '/';
-        directorio[directorio_len + 1] = '\0';
-    }
-}
-
-int main(int argc, char *argv[])
-{
-    if (argc == 1 || (argc > 1 && strcmp(argv[1], PARAMETRO_AYUDA) == 0))
-    {
-        mostrar_ayuda();
-        return 0;
-    }
-
-    char *directorio = argv[1];
-    agregar_slash_directorio(directorio);
-
-    printf("Directorio a analizar: %s\n", directorio);
-    leer_archivos_de_directorio(directorio);
-    return 0;
 }
