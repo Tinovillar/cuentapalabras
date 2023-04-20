@@ -6,39 +6,35 @@
 #include <stdio.h>
 #include <string.h>
 
-typedef struct celda
-{
+typedef struct celda {
     elemento_t elem;
     struct celda *siguiente;
 } celda_t;
 
 typedef struct celda celda_t;
 
-struct lista
-{
+struct lista {
     celda_t *primera;
     int cantidad;
 };
 
 // Implementacion de metodos
 
-lista_t *lista_crear()
-{
-    lista_t *lista = (lista_t *)malloc(sizeof(lista_t));
+lista_t *lista_crear() {
+    lista_t *lista = (lista_t *) malloc(sizeof(lista_t));
     lista->cantidad = 0;
     lista->primera = NULL;
     return lista;
 }
 
-int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
-{
+int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
     if (l == NULL)
         return FALSE;
 
     if (pos < 0 || pos > l->cantidad)
         return FALSE;
 
-    celda_t *celda_nueva = (celda_t *)malloc(sizeof(celda_t));
+    celda_t *celda_nueva = (celda_t *) malloc(sizeof(celda_t));
     celda_nueva->siguiente = NULL;
     if (celda_nueva == NULL)
         return FALSE;
@@ -48,19 +44,15 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
     celda_t *prev = NULL;
     unsigned int i = 0;
 
-    while (current != NULL && i < pos)
-    {
+    while (current != NULL && i < pos) {
         prev = current;
         current = current->siguiente;
         i++;
     }
-    if (prev == NULL)
-    { // Se inserta al inicio de la lista
+    if (prev == NULL) { // Se inserta al inicio de la lista
         celda_nueva->siguiente = l->primera;
         l->primera = celda_nueva;
-    }
-    else
-    { // Se inserta en medio o al final de la lista
+    } else { // Se inserta en medio o al final de la lista
         celda_nueva->siguiente = current;
         prev->siguiente = celda_nueva;
     }
@@ -69,16 +61,13 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos)
     return TRUE;
 }
 
-elemento_t *lista_eliminar(lista_t *l, unsigned int pos)
-{
+elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
     elemento_t *toReturn = NULL;
     if (l == NULL || l->cantidad == 0 || l->cantidad < pos)
         return toReturn;
-    else
-    {
+    else {
         celda_t *cursor = l->primera;
-        for (int i = 0; i < pos - 1; i++)
-        {
+        for (int i = 0; i < pos - 1; i++) {
             cursor = cursor->siguiente;
         }
         celda_t *matar = cursor->siguiente;
@@ -89,8 +78,7 @@ elemento_t *lista_eliminar(lista_t *l, unsigned int pos)
     }
 }
 
-elemento_t *lista_elemento(lista_t *l, unsigned int pos)
-{
+elemento_t *lista_elemento(lista_t *l, unsigned int pos) {
     if (l == NULL)
         return NULL;
 
@@ -100,8 +88,7 @@ elemento_t *lista_elemento(lista_t *l, unsigned int pos)
     celda_t *current = l->primera;
     unsigned int i = 0;
 
-    while (current != NULL && i < pos)
-    {
+    while (current != NULL && i < pos) {
         current = current->siguiente;
         i++;
     }
@@ -109,8 +96,7 @@ elemento_t *lista_elemento(lista_t *l, unsigned int pos)
     return &(current->elem);
 }
 
-void intercambiar(elemento_t *e1, elemento_t *e2)
-{
+void intercambiar(elemento_t *e1, elemento_t *e2) {
     elemento_t aux = *e1;
     e1->a = e2->a;
     e1->b = e2->b;
@@ -118,23 +104,18 @@ void intercambiar(elemento_t *e1, elemento_t *e2)
     e2->b = aux.b;
 }
 
-int lista_ordenar(lista_t *l, funcion_comparacion_t comparar)
-{
+int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
     celda_t *current = l->primera;
     celda_t *cursor;
     int toReturn = FALSE;
-    if (l->cantidad > 0)
-    {
-        while (current->siguiente != NULL)
-        {
+    if (l->cantidad > 0) {
+        while (current->siguiente != NULL) {
             cursor = current;
-            while (cursor->siguiente != NULL)
-            {
+            while (cursor->siguiente != NULL) {
                 cursor = cursor->siguiente;
                 //printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
-                if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2)
-                {
-                  //  printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
+                if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2) {
+                    //  printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
                     intercambiar(&current->elem, &cursor->elem);
                     //printf("DESPUES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
                 }
@@ -147,15 +128,13 @@ int lista_ordenar(lista_t *l, funcion_comparacion_t comparar)
     return toReturn;
 }
 
-unsigned int lista_cantidad(lista_t *l)
-{
+unsigned int lista_cantidad(lista_t *l) {
     if (l == NULL)
         return 0;
     return l->cantidad;
 }
 
-int lista_vacia(lista_t lista)
-{
+int lista_vacia(lista_t lista) {
     lista_t *l = &lista;
     if (l == NULL)
         return FALSE;
@@ -164,8 +143,7 @@ int lista_vacia(lista_t lista)
     return vacia;
 }
 
-void mostrar_elementos(lista_t *lista)
-{
+void mostrar_elementos(lista_t *lista) {
     if (lista == NULL) return;
 
     celda_t *cursor;

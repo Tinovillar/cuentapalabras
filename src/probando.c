@@ -4,16 +4,16 @@
 #include <string.h>
 
 
-// Definición de la estructura para un nodo trie
+// Definiciï¿½n de la estructura para un nodo trie
 typedef struct TrieNode {
     char key;
     int count;
-    struct TrieNode* children[26];
+    struct TrieNode *children[26];
 } TrieNode;
 
-// Función para crear un nuevo nodo trie
-TrieNode* createTrieNode(char key) {
-    TrieNode* node = (TrieNode*) malloc(sizeof(TrieNode));
+// Funciï¿½n para crear un nuevo nodo trie
+TrieNode *createTrieNode(char key) {
+    TrieNode *node = (TrieNode *) malloc(sizeof(TrieNode));
     node->key = key;
     node->count = 0;
     for (int i = 0; i < 26; i++) {
@@ -22,9 +22,9 @@ TrieNode* createTrieNode(char key) {
     return node;
 }
 
-// Función para insertar una cadena en el trie
-void insert(TrieNode* root, char* str) {
-    TrieNode* curr = root;
+// Funciï¿½n para insertar una cadena en el trie
+void insert(TrieNode *root, char *str) {
+    TrieNode *curr = root;
     for (int i = 0; str[i] != '\0'; i++) {
         int index = str[i] - 'a';
         if (curr->children[index] == NULL) {
@@ -35,9 +35,9 @@ void insert(TrieNode* root, char* str) {
     curr->count++;
 }
 
-// Función para buscar una cadena en el trie
-int search(TrieNode* root, char* str) {
-    TrieNode* curr = root;
+// Funciï¿½n para buscar una cadena en el trie
+int search(TrieNode *root, char *str) {
+    TrieNode *curr = root;
     for (int i = 0; str[i] != '\0'; i++) {
         int index = str[i] - 'a';
         if (curr->children[index] == NULL) {
@@ -48,8 +48,8 @@ int search(TrieNode* root, char* str) {
     return curr->count;
 }
 
-// Función para imprimir todas las cadenas en el trie
-void printTrie(TrieNode* node, char* str, int level) {
+// Funciï¿½n para imprimir todas las cadenas en el trie
+void printTrie(TrieNode *node, char *str, int level) {
     if (node->count > 0) {
         str[level] = '\0';
         printf("%s (%d)\n", str, node->count);
@@ -69,8 +69,8 @@ int main() {
 }
 */
 
-void trietest(){
-    TrieNode* root = createTrieNode('\0');
+void trietest() {
+    TrieNode *root = createTrieNode('\0');
 
     FILE *fp;
     int iii = 0;
@@ -79,21 +79,21 @@ void trietest(){
 
     fp = fopen("leeme.txt", "r");
 
-    if(fp == NULL) {
+    if (fp == NULL) {
         printf("No se pudo abrir");
         return;
     }
 
     char anterior;
 
-    while(fscanf(fp, "%c", &word) == 1){
-        if(word == ' ' || word == '\n' && anterior != ',' && anterior != '.') {
+    while (fscanf(fp, "%c", &word) == 1) {
+        if (word == ' ' || word == '\n' && anterior != ',' && anterior != '.') {
             insert(root, arr);
             for (int j = 0; j <= iii; j++) {
                 arr[j] = '\0';
             }
             iii = 0;
-        } else if(word != ',' && word != '.'){
+        } else if (word != ',' && word != '.') {
             arr[iii++] = word;
         }
         anterior = word;

@@ -1,15 +1,13 @@
 #ifndef LISTA_ORDENADA_H
 #define LISTA_ORDENADA_H
 
-typedef enum
-{
+typedef enum {
     ELEM1_MAYOR_QUE_ELEM2,
     ELEM1_IGUAL_QUE_ELEM2,
     ELEM1_MENOR_QUE_ELEM2
 } comparacion_resultado_t;
 
-struct elemento
-{
+struct elemento {
     int a;
     char *b;
 };
@@ -17,7 +15,7 @@ struct elemento
 typedef struct elemento elemento_t;
 
 typedef comparacion_resultado_t(funcion_comparacion_t)(
-    elemento_t *elem1, elemento_t *elem2);
+        elemento_t *elem1, elemento_t *elem2);
 
 typedef struct lista lista_t;
 

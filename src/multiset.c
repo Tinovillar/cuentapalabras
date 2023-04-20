@@ -6,25 +6,21 @@
 #include <stdio.h>
 #include <string.h>
 
-struct trie
-{
+struct trie {
     int cantidad;
     struct trie *siguiente[26];
 };
 
-multiset_t *multiset_crear()
-{
-    multiset_t *t = (multiset_t *)malloc(sizeof(multiset_t));
+multiset_t *multiset_crear() {
+    multiset_t *t = (multiset_t *) malloc(sizeof(multiset_t));
     t->cantidad = 0;
-    for (int i = 0; i < TAMANIO_ALFABETO; i++)
-    {
+    for (int i = 0; i < TAMANIO_ALFABETO; i++) {
         t->siguiente[i] = NULL;
     }
     return t;
 }
 
-void multiset_insertar(multiset_t *m, char *s)
-{
+void multiset_insertar(multiset_t *m, char *s) {
     /*
     unsigned int length = strlen(s);
     multiset_t *current = m;
@@ -38,15 +34,12 @@ void multiset_insertar(multiset_t *m, char *s)
     current->cantidad++;
      */
 
-    if (m != NULL)
-    {
+    if (m != NULL) {
         int index;
         multiset_t *cursor = m;
-        for (int i = 0; s[i] != '\0'; i++)
-        {
+        for (int i = 0; s[i] != '\0'; i++) {
             index = s[i] - 'a';
-            if (cursor->siguiente[index] == NULL)
-            {
+            if (cursor->siguiente[index] == NULL) {
                 cursor->siguiente[index] = multiset_crear();
             }
             cursor = cursor->siguiente[index];
@@ -56,8 +49,7 @@ void multiset_insertar(multiset_t *m, char *s)
 
 }
 
-int multiset_cantidad(multiset_t *m, char *s)
-{
+int multiset_cantidad(multiset_t *m, char *s) {
     /*
     unsigned int length = strlen(s);
     multiset_t *current = m;
@@ -72,12 +64,10 @@ int multiset_cantidad(multiset_t *m, char *s)
      */
 
     int toReturn = 0;
-    if (m != NULL)
-    {
+    if (m != NULL) {
         multiset_t *cursor = m;
         int index;
-        for (int i = 0; (s[i] != '\0') && (cursor->siguiente[s[i] - 'a'] == NULL); i++)
-        {
+        for (int i = 0; (s[i] != '\0') && (cursor->siguiente[s[i] - 'a'] == NULL); i++) {
             index = s[i] - 'a';
             cursor = cursor->siguiente[index];
         }
@@ -88,13 +78,13 @@ int multiset_cantidad(multiset_t *m, char *s)
 }
 
 
-void listar_palabras(multiset_t *trie, lista_t* lista, char *prefijo, int nivel, int index) {
+void listar_palabras(multiset_t *trie, lista_t *lista, char *prefijo, int nivel, int index) {
     // Si cantidad es > 0 es porque hay una palabra
     if (trie->cantidad > 0) {
         elemento_t elem;
         elem.a = trie->cantidad;
         // Creamos un nuevo char* que va a teneer el mismo contenido que prefijo y se lo ponemos a elem.
-        char* palabra = malloc(strlen(prefijo) * sizeof(char));
+        char *palabra = malloc(strlen(prefijo) * sizeof(char));
         strcpy(palabra, prefijo);
         elem.b = palabra;
         lista_insertar(lista, elem, index);
@@ -108,9 +98,8 @@ void listar_palabras(multiset_t *trie, lista_t* lista, char *prefijo, int nivel,
     }
 }
 
-lista_t* multiset_elementos(multiset_t *m, int (*f)(elemento_t,elemento_t))
-{
-    lista_t* lista = lista_crear();
+lista_t *multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t)) {
+    lista_t *lista = lista_crear();
     char prefijo[100] = "\0";
     listar_palabras(m, lista, prefijo, 0, 0);
 
@@ -172,6 +161,6 @@ void insertar_palabras(multiset_t *m, lista_t *lista, char *caracteres) {
 }
 */
 
-void multiset_eliminar(multiset_t **m){
+void multiset_eliminar(multiset_t **m) {
 
 }

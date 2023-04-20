@@ -5,8 +5,7 @@
 #include <stdio.h>
 #include <string.h>
 
-void test()
-{
+void test() {
     lista_t *lista = lista_crear();
     printf("Cantidad de elementos: %u\n", lista_cantidad(lista));
 
@@ -44,18 +43,12 @@ void test()
     printf("Cantidad de elementos: %u\n\n", lista_cantidad(lista));
     mostrar_elementos(lista);
 
-    comparacion_resultado_t comparar_enteros(elemento_t * e1, elemento_t * e2)
-    {
-        if (e1->b > e2->b)
-        {
+    comparacion_resultado_t comparar_enteros(elemento_t *e1, elemento_t *e2) {
+        if (e1->b > e2->b) {
             return ELEM1_MAYOR_QUE_ELEM2;
-        }
-        else if (e1->b == e2->b)
-        {
+        } else if (e1->b == e2->b) {
             return ELEM1_IGUAL_QUE_ELEM2;
-        }
-        else
-        {
+        } else {
             return ELEM1_MENOR_QUE_ELEM2;
         }
     }
