@@ -3,8 +3,6 @@
 #include "utils.h"
 
 #include <stdlib.h>
-#include <stdio.h>
-#include <string.h>
 
 typedef struct celda {
     elemento_t elem;
@@ -62,27 +60,39 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
 }
 
 elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
-    elemento_t *toReturn = NULL;
-    if (l == NULL || l->cantidad == 0 || l->cantidad < pos)
-        return toReturn;
-    else {
-        celda_t *cursor = l->primera;
-        for (int i = 0; i < pos - 1; i++) {
-            cursor = cursor->siguiente;
-        }
-        celda_t *matar = cursor->siguiente;
-        cursor->siguiente = matar->siguiente;
-        *toReturn = matar->elem;
-        free(matar);
-        return toReturn;
+    if (l == NULL || pos >= l->cantidad) {
+        return NULL;  // invalid list or position
     }
+
+    celda_t *anterior = NULL;
+    celda_t *actual = l->primera;
+    for (unsigned int i = 0; i < pos; i++) {
+        anterior = actual;
+        actual = actual->siguiente;
+    }
+
+    if (anterior == NULL) {
+        l->primera = actual->siguiente;
+    } else {
+        anterior->siguiente = actual->siguiente;
+    }
+
+    elemento_t *elem = (elemento_t *)malloc(sizeof(elemento_t));
+    if (elem == NULL) {
+        return NULL;  // memory allocation failed
+    }
+    *elem = actual->elem;
+    free(actual);
+
+    l->cantidad--;
+    return elem;
 }
 
 elemento_t *lista_elemento(lista_t *l, unsigned int pos) {
     if (l == NULL)
         return NULL;
 
-    if (pos < 0 || pos > l->cantidad)
+    if (pos > l->cantidad)
         return NULL;
 
     celda_t *current = l->primera;
@@ -113,13 +123,9 @@ int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
             cursor = current;
             while (cursor->siguiente != NULL) {
                 cursor = cursor->siguiente;
-                //printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
                 if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2) {
-                    //  printf("ANTES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
                     intercambiar(&current->elem, &cursor->elem);
-                    //printf("DESPUES DE INTERCAMBIAR: %s -- %s\n", current->elem.b, cursor->elem.b);
                 }
-                //printf("\n%s || %s\n", current->elem.b, cursor->elem.b);
             }
             current = current->siguiente;
         }
@@ -139,17 +145,5 @@ int lista_vacia(lista_t lista) {
     if (l == NULL)
         return FALSE;
     int vacia = l->cantidad == 0 ? TRUE : FALSE;
-    free(l);
     return vacia;
-}
-
-void mostrar_elementos(lista_t *lista) {
-    if (lista == NULL) return;
-
-    celda_t *cursor;
-    cursor = lista->primera;
-    while (cursor != NULL) {
-        printf("[%d]    (%s)\n", cursor->elem.a, cursor->elem.b);
-        cursor = cursor->siguiente;
-    }
 }

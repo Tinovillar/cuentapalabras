@@ -6,6 +6,7 @@
 
 #define PARAMETRO_AYUDA "-h"
 #define PALABRA_LONGITUD_MAXIMA 256
+#define TAMANIO_ALFABETO 26
 
 #define EXTENSION_VALIDA ".txt"
 
@@ -89,15 +90,27 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio);
 int parsear_contenido_archivo(multiset_t *multiset_archivo, multiset_t *multiset_totales, char *ruta_archivo);
 
 /**
- * Funcion que crea el archivo cadauno.out conteniendo los resultados del parseo previo.
+ * Funcion que crea los archivos de resultados.
  * @param resultado_directorio Struct conteniendo los datos del parseo.
  * @param ruta_directorio La ruta del directorio a crear el archivo.
  * @return True o false si fue exitoso o no.
  */
 int crear_archivo_resultados(resultado_directorio_t *resultado_directorio, char *ruta_directorio);
 
+/**
+ * Funcion que crea el archivo cadauno en base a los datos leidos previamente.
+ * @param resultado_directorio Struct conteniendo los datos del parseo.
+ * @param ruta_directorio La ruta del directorio a crear el archivo.
+ * @return True o false si fue exitoso o no.
+ */
 int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ruta_directorio);
 
+/**
+ * Funcion que crea el archivo totales en base a los datos leidos previamente.
+ * @param resultado_directorio Struct conteniendo los datos del parseo.
+ * @param ruta_directorio La ruta del directorio a crear el archivo.
+ * @return True o false si fue exitoso o no.
+ */
 int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ruta_directorio);
 
 #endif

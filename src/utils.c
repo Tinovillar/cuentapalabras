@@ -78,7 +78,7 @@ int calcular_archivos_en_directorio(char *ruta_directorio) {
         return FALSE;
     }
 
-    int cantidad_archivos = -1;
+    int cantidad_archivos = 0;
     struct dirent *archivo;
     while ((archivo = readdir(directorio)) != NULL) {
         // Ignorar . y ..
@@ -107,7 +107,7 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
 
     int archivos_en_directorio = calcular_archivos_en_directorio(ruta_directorio);
     if (archivos_en_directorio <= 0) {
-        printf("Error: No se pudo leer el directorio '%s'\n", ruta_directorio);
+        printf("Error: No se encontraron archivos a leer el directorio '%s'\n", ruta_directorio);
         return FALSE;
     }
 
@@ -163,12 +163,10 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
             resultado_archivo_t *resultado_archivo = (resultado_archivo_t *) malloc(sizeof(resultado_archivo_t));
             resultado_archivo->multiset = multiset_array[indice];
 
-            char *nombre_archivo = (char *) malloc(strlen(archivo->d_name) * sizeof(char));
+            char *nombre_archivo = (char *) malloc( strlen(archivo->d_name) * sizeof(char));
             strcpy(nombre_archivo, archivo->d_name);
-
             resultado_archivo->nombre_archivo = nombre_archivo;
             resultado_directorio->archivos[indice] = resultado_archivo;
-
             indice++;
         }
     }
@@ -239,6 +237,17 @@ int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ru
                 elemento_t *elemento = lista_elemento(elementos, j);
                 fprintf(archivo, "%d    %s\n", elemento->a, elemento->b);
             }
+
+            // Limpiamos la lista despues de usar
+            for (int j = 0; j < cantidad_elementos; j++) {
+                elemento_t *eliminado = lista_eliminar(elementos, 0);
+                if (eliminado != NULL)
+                    printf("Elimine %s\n", eliminado->b);
+                free(eliminado);
+                eliminado = NULL;
+            }
+           free(elementos);
+           elementos = NULL;
         }
     }
     fclose(archivo);
@@ -257,16 +266,27 @@ int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ru
         printf("Error: No se encontro multiset para totales!\n");
         return FALSE;
     }
-
     // Palabras
     lista_t *elementos = multiset_elementos(resultado_directorio->totales,
                                             (int (*)(elemento_t, elemento_t)) comparar_enteros_desc);
     // Meto las palabras con su apariciones
     unsigned int cantidad_elementos = lista_cantidad(elementos);
-    for (int j = 0; j < cantidad_elementos; j++) {
-        elemento_t *elemento = lista_elemento(elementos, j);
+    for (int i = 0; i < cantidad_elementos; i++) {
+        elemento_t *elemento = lista_elemento(elementos, i);
         fprintf(archivo, "%d    %s\n", elemento->a, elemento->b);
     }
+
+    // Limpiamos la lista despues de usar
+    for (int i = 0; i < cantidad_elementos; i++) {
+        elemento_t *eliminado = lista_eliminar(elementos, 0);
+        if (eliminado != NULL)
+            printf("Elimine %s\n", eliminado->b);
+        free(eliminado);
+        eliminado = NULL;
+    }
+
+    free(elementos);
+    elementos = NULL;
 
     fclose(archivo);
     return TRUE;
