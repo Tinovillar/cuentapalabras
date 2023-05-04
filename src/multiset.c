@@ -49,34 +49,35 @@ int multiset_cantidad(multiset_t *m, char *s) {
     return current->cantidad;
 }
 
-void listar_palabras(multiset_t *trie, lista_t *lista, char *prefijo, int nivel, int index) {
+void listar_palabras(multiset_t *trie, lista_t *lista, char *prefijo, int nivel) {
     if (trie->cantidad > 0) {
         elemento_t elem;
         elem.a = trie->cantidad;
         char *palabra = malloc((strlen(prefijo) + 1) * sizeof(char));
         strcpy(palabra, prefijo);
         elem.b = palabra;
-        lista_insertar(lista, elem, index);
+        lista_insertar(lista, elem, 0);
     }
     for (int i = 0; i < TAMANIO_ALFABETO; i++) {
         if (trie->siguiente[i] != NULL) {
             prefijo[nivel] = i + 'a';
             prefijo[nivel + 1] = '\0';
-            listar_palabras(trie->siguiente[i], lista, prefijo, nivel + 1, index);
+            listar_palabras(trie->siguiente[i], lista, prefijo, nivel + 1);
         }
     }
 }
 
 lista_t *multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t)) {
     lista_t *lista = lista_crear();
-    char prefijo[100] = "\0";
-    listar_palabras(m, lista, prefijo, 0, 0);
+    char prefijo[PALABRA_LONGITUD_MAXIMA] = "\0";
+    listar_palabras(m, lista, prefijo, 0);
     lista_ordenar(lista, (comparacion_resultado_t (*)(elemento_t *, elemento_t *)) f);
     return lista;
 }
 
 void multiset_eliminar(multiset_t **m) {
     if (*m == NULL) return;
+
     for (int i = 0; i < TAMANIO_ALFABETO; i++) {
         multiset_eliminar(&((*m)->siguiente[i]));
     }

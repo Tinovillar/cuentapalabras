@@ -17,18 +17,6 @@ comparacion_resultado_t comparar_enteros_asc(elemento_t *e1, elemento_t *e2) {
     return ELEM1_MENOR_QUE_ELEM2;
 }
 
-comparacion_resultado_t comparar_enteros_desc(elemento_t *e1, elemento_t *e2) {
-    if (e2->a > e1->a)
-        return ELEM1_MAYOR_QUE_ELEM2;
-    if (e1->a == e2->a) {
-        if (e2->b < e1->b) return ELEM1_MENOR_QUE_ELEM2;
-        if (e2->b == e1->b) return ELEM1_IGUAL_QUE_ELEM2;
-
-        return ELEM1_MAYOR_QUE_ELEM2;
-    }
-    return ELEM1_MENOR_QUE_ELEM2;
-}
-
 char *concatenar_strings(char *str1, char *str2) {
     unsigned int len1 = strlen(str1);
     unsigned int len2 = strlen(str2);
@@ -241,8 +229,6 @@ int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ru
             // Limpiamos la lista despues de usar
             for (int j = 0; j < cantidad_elementos; j++) {
                 elemento_t *eliminado = lista_eliminar(elementos, 0);
-                if (eliminado != NULL)
-                    printf("Elimine %s\n", eliminado->b);
                 free(eliminado);
                 eliminado = NULL;
             }
@@ -268,7 +254,7 @@ int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ru
     }
     // Palabras
     lista_t *elementos = multiset_elementos(resultado_directorio->totales,
-                                            (int (*)(elemento_t, elemento_t)) comparar_enteros_desc);
+                                            (int (*)(elemento_t, elemento_t)) comparar_enteros_asc);
     // Meto las palabras con su apariciones
     unsigned int cantidad_elementos = lista_cantidad(elementos);
     for (int i = 0; i < cantidad_elementos; i++) {
@@ -279,8 +265,6 @@ int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ru
     // Limpiamos la lista despues de usar
     for (int i = 0; i < cantidad_elementos; i++) {
         elemento_t *eliminado = lista_eliminar(elementos, 0);
-        if (eliminado != NULL)
-            printf("Elimine %s\n", eliminado->b);
         free(eliminado);
         eliminado = NULL;
     }

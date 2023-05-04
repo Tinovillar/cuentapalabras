@@ -1,7 +1,7 @@
 #ifndef MULTISET_H
 #define MULTISET_H
 
-#include "listaordenada.h"
+#include "lista.h"
 
 struct trie;
 typedef struct trie multiset_t;

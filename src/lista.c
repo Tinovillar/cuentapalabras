@@ -1,4 +1,4 @@
-#include "listaordenada.h"
+#include "lista.h"
 
 #include "utils.h"
 
@@ -16,8 +16,6 @@ struct lista {
     int cantidad;
 };
 
-// Implementacion de metodos
-
 lista_t *lista_crear() {
     lista_t *lista = (lista_t *) malloc(sizeof(lista_t));
     lista->cantidad = 0;
@@ -26,33 +24,29 @@ lista_t *lista_crear() {
 }
 
 int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
-    if (l == NULL)
+    if (l == NULL || pos > l->cantidad) {
         return FALSE;
-
-    if (pos < 0 || pos > l->cantidad)
-        return FALSE;
-
+    }
     celda_t *celda_nueva = (celda_t *) malloc(sizeof(celda_t));
     celda_nueva->siguiente = NULL;
     if (celda_nueva == NULL)
         return FALSE;
     celda_nueva->elem = elem;
 
-    celda_t *current = l->primera;
-    celda_t *prev = NULL;
+    celda_t *anterior = NULL;
+    celda_t *actual = l->primera;
     unsigned int i = 0;
-
-    while (current != NULL && i < pos) {
-        prev = current;
-        current = current->siguiente;
+    while (actual != NULL && i < pos) {
+        anterior = actual;
+        actual = actual->siguiente;
         i++;
     }
-    if (prev == NULL) { // Se inserta al inicio de la lista
+    if (anterior == NULL) { // Se inserta al inicio de la lista
         celda_nueva->siguiente = l->primera;
         l->primera = celda_nueva;
     } else { // Se inserta en medio o al final de la lista
-        celda_nueva->siguiente = current;
-        prev->siguiente = celda_nueva;
+        celda_nueva->siguiente = actual;
+        anterior->siguiente = celda_nueva;
     }
 
     l->cantidad++;
@@ -60,44 +54,48 @@ int lista_insertar(lista_t *l, elemento_t elem, unsigned int pos) {
 }
 
 elemento_t *lista_eliminar(lista_t *l, unsigned int pos) {
-    if (l == NULL || pos >= l->cantidad) {
-        return NULL;  // invalid list or position
+    if (l == NULL || pos > l->cantidad) {
+        return NULL;
     }
 
     celda_t *anterior = NULL;
     celda_t *actual = l->primera;
-    for (unsigned int i = 0; i < pos; i++) {
+    unsigned int i = 0;
+    while (actual != NULL && i < pos) {
         anterior = actual;
         actual = actual->siguiente;
+        i++;
     }
-
-    if (anterior == NULL) {
+    if (anterior == NULL) { // Se elimino el primero
         l->primera = actual->siguiente;
-    } else {
+    } else { // Se elimino en el medio o al final
         anterior->siguiente = actual->siguiente;
     }
 
+    /*
+     * TODO: devolvemos el puntero del elemento original, o creamos uno nuevo pero con los mismos
+     * valores?
+    // Creamos un puntero para poder retornar el elemento eliminado
     elemento_t *elem = (elemento_t *)malloc(sizeof(elemento_t));
     if (elem == NULL) {
-        return NULL;  // memory allocation failed
+        return NULL;
     }
-    *elem = actual->elem;
-    free(actual);
-
+    elem->a = actual->elem.a;
+    elem->b = actual->elem.b;
     l->cantidad--;
-    return elem;
+    free(actual);
+     */
+    l->cantidad--;
+    return &actual->elem;
 }
 
 elemento_t *lista_elemento(lista_t *l, unsigned int pos) {
-    if (l == NULL)
+    if (l == NULL || pos > l->cantidad) {
         return NULL;
-
-    if (pos > l->cantidad)
-        return NULL;
+    }
 
     celda_t *current = l->primera;
     unsigned int i = 0;
-
     while (current != NULL && i < pos) {
         current = current->siguiente;
         i++;
@@ -115,23 +113,25 @@ void intercambiar(elemento_t *e1, elemento_t *e2) {
 }
 
 int lista_ordenar(lista_t *l, funcion_comparacion_t comparar) {
-    celda_t *current = l->primera;
-    celda_t *cursor;
-    int toReturn = FALSE;
-    if (l->cantidad > 0) {
-        while (current->siguiente != NULL) {
-            cursor = current;
-            while (cursor->siguiente != NULL) {
-                cursor = cursor->siguiente;
-                if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2) {
-                    intercambiar(&current->elem, &cursor->elem);
-                }
-            }
-            current = current->siguiente;
-        }
-        toReturn = TRUE;
+    if (l == NULL) {
+        return FALSE;
     }
-    return toReturn;
+
+    celda_t *current = l->primera;
+    celda_t *cursor = NULL;
+
+    while (current->siguiente != NULL) {
+        cursor = current;
+        while (cursor->siguiente != NULL) {
+            cursor = cursor->siguiente;
+            if (comparar(&current->elem, &cursor->elem) == ELEM1_MAYOR_QUE_ELEM2) {
+                intercambiar(&current->elem, &cursor->elem);
+            }
+        }
+        current = current->siguiente;
+    }
+
+    return TRUE;
 }
 
 unsigned int lista_cantidad(lista_t *l) {
@@ -144,6 +144,5 @@ int lista_vacia(lista_t lista) {
     lista_t *l = &lista;
     if (l == NULL)
         return FALSE;
-    int vacia = l->cantidad == 0 ? TRUE : FALSE;
-    return vacia;
+    return l->cantidad == 0 ? TRUE : FALSE;
 }

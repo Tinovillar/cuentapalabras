@@ -39,16 +39,10 @@
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/listaordenada.h" />
-		<Unit filename="src/main.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/multiset.c">
 			<Option compilerVar="CC" />
 		</Unit>
 		<Unit filename="src/multiset.h" />
-		<Unit filename="src/probando.c">
-			<Option compilerVar="CC" />
-		</Unit>
 		<Unit filename="src/utils.c">
 			<Option compilerVar="CC" />
 		</Unit>

@@ -30,8 +30,7 @@ int main(int argc, char *argv[]) {
     // Cleanup cadauno.
     for (int i = 0; i < resultado_directorio->cantidad_archivos; i++) {
         multiset_eliminar(&resultado_directorio->archivos[i]->multiset);
-        // TODO: hacer un free del nombre del archivo por alguna razon rompe tood.
-        // free(resultado_directorio->archivos[i]->nombre_archivo);
+        //free(resultado_directorio->archivos[i]->nombre_archivo);
         free(resultado_directorio->archivos[i]);
         resultado_directorio->archivos[i] = NULL;
     }

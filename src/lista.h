@@ -1,5 +1,5 @@
-#ifndef LISTA_ORDENADA_H
-#define LISTA_ORDENADA_H
+#ifndef LISTA_H
+#define LISTA_H
 
 typedef enum {
     ELEM1_MAYOR_QUE_ELEM2,

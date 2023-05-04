@@ -41,15 +41,6 @@ typedef struct resultado_directorio resultado_directorio_t;
 comparacion_resultado_t comparar_enteros_asc(elemento_t *e1, elemento_t *e2);
 
 /**
- * Funcion de comparacion entre dos elementos. Primero compara la cantidad de
- * apariciones, y si esta coincide se compara alfabeticaamente el nombre. Descendente
- * @param e1 Elemento 1.
- * @param e2 Elemento 2.
- * @return El resultado de la comparacion.
- */
-comparacion_resultado_t comparar_enteros_desc(elemento_t *e1, elemento_t *e2);
-
-/**
  * Funcion que toma dos char* y los concatena.
  * @param str1 String 1 a concatenar.
  * @param str2 String 2 a concatenar.
