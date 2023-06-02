@@ -20,27 +20,33 @@ multiset_t *multiset_crear() {
 }
 
 void multiset_insertar(multiset_t *m, char *s) {
-    if (m == NULL) return;
+    if (m == NULL || s == NULL) return;
 
-    unsigned int length = strlen(s);
-    multiset_t *current = m;
-    for (int i = 0; i < length; i++) {
-        int index = s[i] - 'a';
-        if (!current->siguiente[index]) {
-            current->siguiente[index] = multiset_crear();
+    unsigned int len = strlen(s);
+    multiset_t *nodo_actual = m;
+
+    for (int i = 0; i < len; i++) {
+        int index = (int)(s[i] - 'a');
+
+        if (nodo_actual->siguiente[index] == NULL) {
+            nodo_actual->siguiente[index] = malloc(sizeof(multiset_t));
+            nodo_actual->siguiente[index]->cantidad = 0;
+            memset(nodo_actual->siguiente[index]->siguiente, 0, sizeof(nodo_actual->siguiente[index]->siguiente));
         }
-        current = current->siguiente[index];
+
+        nodo_actual = nodo_actual->siguiente[index];
     }
-    current->cantidad++;
+
+    nodo_actual->cantidad++;
 }
 
 int multiset_cantidad(multiset_t *m, char *s) {
-    if (m == NULL) return 0;
+    if (m == NULL || s == NULL) return 0;
 
     unsigned int length = strlen(s);
     multiset_t *current = m;
     for (int i = 0; i < length; i++) {
-        int index = s[i] - 'a';
+        int index = (int)(s[i] - 'a');
         if (current->siguiente[index] == NULL) {
             return 0;
         }
@@ -49,34 +55,62 @@ int multiset_cantidad(multiset_t *m, char *s) {
     return current->cantidad;
 }
 
-void listar_palabras(multiset_t *trie, lista_t *lista, char *prefijo, int nivel) {
-    if (trie->cantidad > 0) {
-        elemento_t elem;
-        elem.a = trie->cantidad;
-        char *palabra = malloc((strlen(prefijo) + 1) * sizeof(char));
-        strcpy(palabra, prefijo);
-        elem.b = palabra;
-        lista_insertar(lista, elem, 0);
+void multiset_elementos_aux(multiset_t *m, lista_t* elementos, char *prefijo) {
+    if (m == NULL || elementos == NULL) {
+        return;
     }
+
+    // Si cantidad > 0 es porque hay una palabra, la agregamos a la lista.
+    if (m->cantidad > 0) {
+        elemento_t *elemento = (elemento_t *)malloc(sizeof(elemento_t));
+        if (elemento == NULL) {
+            return;
+        }
+
+        elemento->a = m->cantidad;
+        elemento->b = strdup(prefijo);
+        // Fallo el prefijo.
+        if (elemento->b == NULL) {
+            free(elemento);
+            return;
+        }
+
+        // Insertamos al final usaando la cantidad actual de la lista.
+        unsigned int pos = lista_cantidad(elementos);
+        lista_insertar(elementos, *elemento, pos);
+    }
+
+    // Recorremos recursivamente todos los hijos
     for (int i = 0; i < TAMANIO_ALFABETO; i++) {
-        if (trie->siguiente[i] != NULL) {
-            prefijo[nivel] = i + 'a';
-            prefijo[nivel + 1] = '\0';
-            listar_palabras(trie->siguiente[i], lista, prefijo, nivel + 1);
+        if (m->siguiente[i] != NULL) {
+            char *prefijo_nuevo = (char *)malloc(strlen(prefijo) + 2);
+            if (prefijo_nuevo == NULL) {
+                return;
+            }
+            strcpy(prefijo_nuevo, prefijo);
+            prefijo_nuevo[strlen(prefijo)] = 'a' + i;
+            prefijo_nuevo[strlen(prefijo) + 1] = '\0';
+
+            // Recursion con el prefijo nuevo
+            multiset_elementos_aux(m->siguiente[i], elementos, prefijo_nuevo);
+            free(prefijo_nuevo);
         }
     }
 }
 
-lista_t *multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t)) {
-    lista_t *lista = lista_crear();
-    char prefijo[PALABRA_LONGITUD_MAXIMA] = "\0";
-    listar_palabras(m, lista, prefijo, 0);
+lista_t multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t)) {
+    lista_t* lista = lista_crear();
+    if (m == NULL)
+        return *lista;
+
+    multiset_elementos_aux(m, lista, "");
     lista_ordenar(lista, (comparacion_resultado_t (*)(elemento_t *, elemento_t *)) f);
-    return lista;
+
+    return *lista;
 }
 
 void multiset_eliminar(multiset_t **m) {
-    if (*m == NULL) return;
+    if (m == NULL || *m == NULL) return;
 
     for (int i = 0; i < TAMANIO_ALFABETO; i++) {
         multiset_eliminar(&((*m)->siguiente[i]));

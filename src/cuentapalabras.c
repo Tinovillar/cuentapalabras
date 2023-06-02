@@ -2,7 +2,6 @@
 
 #include <stdio.h>
 #include <string.h>
-#include <stdlib.h>
 
 int main(int argc, char *argv[]) {
     // Condicion para mostrar cartel de ayuda.
@@ -25,18 +24,8 @@ int main(int argc, char *argv[]) {
         printf("Se escribieron los archivos!\n");
     }
 
-    // Cleanup totales
-    multiset_eliminar(&resultado_directorio->totales);
-    // Cleanup cadauno.
-    for (int i = 0; i < resultado_directorio->cantidad_archivos; i++) {
-        multiset_eliminar(&resultado_directorio->archivos[i]->multiset);
-        //free(resultado_directorio->archivos[i]->nombre_archivo);
-        free(resultado_directorio->archivos[i]);
-        resultado_directorio->archivos[i] = NULL;
-    }
-    // Cleanup final.
-    free(resultado_directorio);
-    resultado_directorio = NULL;
+    // Cleanup final
+    limpiar_resultados(resultado_directorio);
 
     return resultado;
 }

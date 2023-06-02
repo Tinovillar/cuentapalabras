@@ -16,7 +16,7 @@ void multiset_insertar(multiset_t *m, char *s);
 int multiset_cantidad(multiset_t *m, char *s);
 
 /* Devuelve una lista de tipo lista t ordenada segun la funcion f con todos los elementos del multiset m y la cantidad de apariciones de cada uno. */
-lista_t *multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t));
+lista_t multiset_elementos(multiset_t *m, int (*f)(elemento_t, elemento_t));
 
 /* Elimina el multiset m liberando el espacio de memoria reservado. Luego de la invocacion m debe valer NULL. */
 void multiset_eliminar(multiset_t **m);

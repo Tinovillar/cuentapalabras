@@ -5,22 +5,26 @@
 #include <stdio.h>
 #include <dirent.h>
 
-comparacion_resultado_t comparar_enteros_asc(elemento_t *e1, elemento_t *e2) {
+comparacion_resultado_t comparar_elementos(elemento_t *e1, elemento_t *e2) {
     if (e1->a > e2->a)
         return ELEM1_MAYOR_QUE_ELEM2;
-    if (e1->a == e2->a) {
-        if (e1->b > e2->b) return ELEM1_MAYOR_QUE_ELEM2;
-        if (e1->b == e2->b) return ELEM1_IGUAL_QUE_ELEM2;
-
+    else if (e1->a < e2->a)
         return ELEM1_MENOR_QUE_ELEM2;
+    else {
+        int result = strcmp(e1->b, e2->b);
+        if (result > 0)
+            return ELEM1_MAYOR_QUE_ELEM2;
+        else if (result < 0)
+            return ELEM1_MENOR_QUE_ELEM2;
+        else
+            return ELEM1_IGUAL_QUE_ELEM2;
     }
-    return ELEM1_MENOR_QUE_ELEM2;
 }
 
 char *concatenar_strings(char *str1, char *str2) {
     unsigned int len1 = strlen(str1);
     unsigned int len2 = strlen(str2);
-    char *result = (char *) malloc(len1 + len2 + 1); // add 1 for the null terminator
+    char *result = (char *) malloc(len1 + len2 + 1);
     if (result == NULL) {
         return NULL;
     }
@@ -95,7 +99,7 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
 
     int archivos_en_directorio = calcular_archivos_en_directorio(ruta_directorio);
     if (archivos_en_directorio <= 0) {
-        printf("Error: No se encontraron archivos a leer el directorio '%s'\n", ruta_directorio);
+        printf("Informe: No se encontraron archivos a leer el directorio '%s'\n", ruta_directorio);
         return FALSE;
     }
 
@@ -108,7 +112,7 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
 
     // Creamos el struct de retorno
     resultado_directorio_t *resultado_directorio = (resultado_directorio_t *) malloc(
-            sizeof(resultado_directorio_t) + sizeof(resultado_archivo_t[archivos_en_directorio]));
+            sizeof(resultado_directorio_t) + sizeof(resultado_archivo_t *) * archivos_en_directorio);
     resultado_directorio->cantidad_archivos = archivos_en_directorio;
     resultado_directorio->totales = NULL;
     for (int i = 0; i < archivos_en_directorio; i++) {
@@ -140,6 +144,7 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
         int resultado = parsear_contenido_archivo(multiset, totals_multiset, ruta_archivo);
         if (resultado == FALSE) {
             printf("Error: No se pudo parsear el archivo!'\n");
+            free(ruta_archivo);
             continue;
         }
 
@@ -151,12 +156,14 @@ resultado_directorio_t *parsear_archivos_directorio(char *ruta_directorio) {
             resultado_archivo_t *resultado_archivo = (resultado_archivo_t *) malloc(sizeof(resultado_archivo_t));
             resultado_archivo->multiset = multiset_array[indice];
 
-            char *nombre_archivo = (char *) malloc( strlen(archivo->d_name) * sizeof(char));
+            char *nombre_archivo = (char *) malloc((strlen(archivo->d_name) + 1) * sizeof(char));
             strcpy(nombre_archivo, archivo->d_name);
             resultado_archivo->nombre_archivo = nombre_archivo;
+
             resultado_directorio->archivos[indice] = resultado_archivo;
             indice++;
         }
+        free(ruta_archivo);
     }
 
     resultado_directorio->totales = totals_multiset;
@@ -209,6 +216,7 @@ int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ru
     FILE *archivo = fopen(ruta_archivo, "w");
     if (archivo == NULL) {
         printf("Error: No se pudo crear el archivo: '%s'\n", ruta_archivo);
+        free(ruta_archivo);
         return FALSE;
     }
 
@@ -217,26 +225,25 @@ int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ru
             // Nombre archivo
             fprintf(archivo, "%s\n", resultado_directorio->archivos[i]->nombre_archivo);
             // Palabras
-            lista_t *elementos = multiset_elementos(resultado_directorio->archivos[i]->multiset,
-                                                    (int (*)(elemento_t, elemento_t)) comparar_enteros_asc);
+            lista_t elementos = multiset_elementos(resultado_directorio->archivos[i]->multiset,
+                                                    (int (*)(elemento_t, elemento_t)) comparar_elementos);
             // Meto las palabras con su apariciones
-            unsigned int cantidad_elementos = lista_cantidad(elementos);
+            unsigned int cantidad_elementos = lista_cantidad(&elementos);
             for (int j = 0; j < cantidad_elementos; j++) {
-                elemento_t *elemento = lista_elemento(elementos, j);
+                elemento_t *elemento = lista_elemento(&elementos, j);
                 fprintf(archivo, "%d    %s\n", elemento->a, elemento->b);
             }
 
-            // Limpiamos la lista despues de usar
-            for (int j = 0; j < cantidad_elementos; j++) {
-                elemento_t *eliminado = lista_eliminar(elementos, 0);
+            // Limpiamos la lista después de usar
+            while (lista_cantidad(&elementos) > 0) {
+                elemento_t *eliminado = lista_eliminar(&elementos, 0);
+                free(eliminado->b);
                 free(eliminado);
-                eliminado = NULL;
             }
-           free(elementos);
-           elementos = NULL;
         }
     }
     fclose(archivo);
+    free(ruta_archivo);
     return TRUE;
 }
 
@@ -245,6 +252,7 @@ int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ru
     FILE *archivo = fopen(ruta_archivo, "w");
     if (archivo == NULL) {
         printf("Error: No se pudo crear el archivo: '%s'\n", ruta_archivo);
+        free(ruta_archivo);
         return FALSE;
     }
 
@@ -253,25 +261,43 @@ int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ru
         return FALSE;
     }
     // Palabras
-    lista_t *elementos = multiset_elementos(resultado_directorio->totales,
-                                            (int (*)(elemento_t, elemento_t)) comparar_enteros_asc);
+    lista_t elementos = multiset_elementos(resultado_directorio->totales,
+                                            (int (*)(elemento_t, elemento_t)) comparar_elementos);
     // Meto las palabras con su apariciones
-    unsigned int cantidad_elementos = lista_cantidad(elementos);
+    unsigned int cantidad_elementos = lista_cantidad(&elementos);
     for (int i = 0; i < cantidad_elementos; i++) {
-        elemento_t *elemento = lista_elemento(elementos, i);
+        elemento_t *elemento = lista_elemento(&elementos, i);
         fprintf(archivo, "%d    %s\n", elemento->a, elemento->b);
     }
 
-    // Limpiamos la lista despues de usar
-    for (int i = 0; i < cantidad_elementos; i++) {
-        elemento_t *eliminado = lista_eliminar(elementos, 0);
+    // Limpiamos la lista después de usar
+    while (lista_cantidad(&elementos) > 0) {
+        elemento_t *eliminado = lista_eliminar(&elementos, 0);
+        free(eliminado->b);
         free(eliminado);
-        eliminado = NULL;
     }
 
-    free(elementos);
-    elementos = NULL;
-
     fclose(archivo);
+    free(ruta_archivo);
     return TRUE;
+}
+
+void limpiar_resultados(resultado_directorio_t* resultado_directorio){
+    if (resultado_directorio == NULL) {
+        return;
+    }
+
+    // Limpiar multiset de cada archivo
+    for (int i = 0; i < resultado_directorio->cantidad_archivos; i++) {
+        free(resultado_directorio->archivos[i]->nombre_archivo);
+        multiset_eliminar(&(resultado_directorio->archivos[i]->multiset));
+        free(resultado_directorio->archivos[i]);
+        resultado_directorio->archivos[i] = NULL;
+    }
+
+    // Limpiar multiset totales
+    multiset_eliminar(&(resultado_directorio->totales));
+    resultado_directorio->totales = NULL;
+    free(resultado_directorio);
+    resultado_directorio = NULL;
 }

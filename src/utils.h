@@ -60,6 +60,11 @@ void mostrar_ayuda();
  */
 void agregar_slash_directorio(char *ruta_directorio);
 
+/**
+ * Funcion que cuenta los archivos en un directorio.
+ * @param ruta_directorio Ruta del directorio.
+ * @return Cantidad de archivos.
+ */
 int calcular_archivos_en_directorio(char *ruta_directorio);
 
 /**
@@ -103,5 +108,11 @@ int crear_archivo_cadauno(resultado_directorio_t *resultado_directorio, char *ru
  * @return True o false si fue exitoso o no.
  */
 int crear_archivo_totales(resultado_directorio_t *resultado_directorio, char *ruta_directorio);
+
+/**
+ * Funcion que se encargar de limpiar la memoria luego de escribir los archivos.
+ * @param resultado_directorio La informacion del parseo de directorio.
+ */
+void limpiar_resultados(resultado_directorio_t* resultado_directorio);
 
 #endif

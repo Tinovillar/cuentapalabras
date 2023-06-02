@@ -17,6 +17,13 @@ typedef struct elemento elemento_t;
 typedef comparacion_resultado_t(funcion_comparacion_t)(
         elemento_t *elem1, elemento_t *elem2);
 
+typedef struct celda celda_t;
+
+struct lista {
+    celda_t* primera; //puntero a la primera celda de la lista
+    int cantidad; // cantidad de elementos de la lista
+};
+
 typedef struct lista lista_t;
 
 /* Crea una lista vaciıa y la devuelve */
